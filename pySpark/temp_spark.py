@@ -6,7 +6,7 @@ Este es un archivo temporal
 """
 
 # 
-# Esto en [pyspark | GoogleCloud] NO hace falta (ya hay una seasiÛn de spark lanzada y un sparkContext creado):
+# Esto en [pyspark | GoogleCloud] NO hace falta (ya hay una seasi√≥n de spark lanzada y un sparkContext creado):
 # C:\Archivos de programa\Google\Cloud SDK>gcloud  compute  instances  start  cluster-jjtzapata-m  cluster-jjtzapata-w-0  cluster-jjtzapata-w-1  --zone europe-west1-d
 # 
 from pyspark.sql import SparkSession
@@ -38,12 +38,12 @@ f = sc.textFile(s_input_path + "clicks_train_debug_spark.csv") #     54.348 regi
 f = sc.textFile(s_output_path + "clicks_train_debug_spark.csv") #     54.348 registros
 f = sc.textFile("gs://jjtzapata/clicks_train_debug_spark.csv") #     54.348 registros
 f = sc.textFile("/home/jjtzapata/clicks_train_debug_spark.csv") #     54.348 registros
-# # NOTA: Para copiar a la m·quina de gcloud (cuidado que lo copia a otro usuarioque no es jjtoharia, seguramente /home/jjtzapata!):
+# # NOTA: Para copiar a la m√°quina de gcloud (cuidado que lo copia a otro usuarioque no es jjtoharia, seguramente /home/jjtzapata!):
 # gcloud compute copy-files "C:\Personal\Dropbox\AFI_JOSE\Kaggle\Outbrain\prueba.libsvm" cluster-jjtzapata-m: --zone europe-west1-d
 # # NOTA: Para copiar al Google Storage gs://jjtzapata
 # gsutil cp "C:\Personal\Dropbox\AFI_JOSE\Kaggle\Outbrain\prueba.libsvm" gs://jjtzapata
 # gsutil cp "C:\Personal\Dropbox\AFI_JOSE\Kaggle\Outbrain\clicks_train_debug_spark.csv" gs://jjtzapata
-# # Instancias (m·quinas, clusters) Google Cloud Dataproc:
+# # Instancias (m√°quinas, clusters) Google Cloud Dataproc:
 # # Para ver la IP externa: gcloud compute instances list
 # gcloud compute instances start cluster-jjtzapata-m --zone europe-west1-d
 
@@ -57,7 +57,7 @@ f = f.filter(lambda x: x != cabecera).map(lambda lin: lin.replace("\"","").repla
 
 campos_enteros = ['display_id', 'ad_document_id', 'document_id', 'ad_id', 'clicked', 'numAds', 'platform', 'hora', 'dia', 'ad_campaign_id', 'ad_advertiser_id', 'source_id', 'publisher_id', 'ad_source_id', 'ad_publisher_id', 'pais_US', 'pais_GB' ,'pais_CA' ,'pais_resto']
 campos_string =  ['uuid']  # Eliminados: 'geo_location', 'geo_loc.country', 'pais', 'publish_time', 'ad_publish_time'
-                           # NOTA: Eliminado 'uuid' tambiÈn (de clicks_train_debug_spark.csv)
+                           # NOTA: Eliminado 'uuid' tambi√©n (de clicks_train_debug_spark.csv)
 
 from pyspark.sql.types import StringType, IntegerType, FloatType, StructField, StructType
 def mi_estructura(nombre_campo):
@@ -72,7 +72,7 @@ campos = [mi_estructura(fld_name) for fld_name in cabecera.split(",")]
 estructura = StructType(campos)
 
 # toDF() NO FUNCIONA PORQUE LOS TIPOS NO COINCIDEN (?) full_trainset = f.toDF(estructura)
-# ASÕ QUE LEEMOS DE NUEVO EL CSV, PERO AHORA CON LA ESTRUCTURA (SCHEMA):
+# AS√ç QUE LEEMOS DE NUEVO EL CSV, PERO AHORA CON LA ESTRUCTURA (SCHEMA):
 full_trainset = spark.read.csv("gs://jjtzapata/clicks_train_debug_spark.csv", schema = estructura, header = True, mode = "DROPMALFORMED")
 
 #full_trainset.createOrReplaceTempView("full_trainset")
@@ -121,11 +121,11 @@ pcaModel = bankPCA.fit(train_df)
 pcaResult = pcaModel.transform(train_df).select("label","pcaFeatures")
 pcaResult.show(truncate=False)
 
-#### Hasta aquÌ todo bien (en Google Cloud Dataproc)!
+#### Hasta aqu√≠ todo bien (en Google Cloud Dataproc)!
 # Para conectarse al Linux de Google Cloud Dataproc:
-# - Instalar Google Cloud SDK o mejor usar la web (google cloud console) o usar Kitty (coÒazo crear ssh keys, etc.)
+# - Instalar Google Cloud SDK o mejor usar la web (google cloud console) o usar Kitty (co√±azo crear ssh keys, etc.)
 # - abrimos Spark-Python (pyspark)
-# - Ya est· ("miSparkSession" es "spark" y "sc" es "sc")
+# - Ya est√° ("miSparkSession" es "spark" y "sc" es "sc")
 
 # Para usar XGBoost, hay que instalarlo:
 # 1.- en la consola de Linux: [ssh cluster-jjtzapata-m.europe-west1-d.evident-galaxy-150614]
@@ -141,8 +141,8 @@ pcaResult.show(truncate=False)
 #
 import xgboost as xgb
 dtrain = xgb.DMatrix("/home/jjtzapata/trainset.libsvm#dtrain.cache")
-# NOTA "#dtrain.cache" es para la versiÛn con cachÈ de disco, para ficheros "GRANDES"...
-#dtrain = xgb.DMatrix("hdfs:///trainset.libsvm/#dtrain.cache") # ESTO NO FUCNIONA IS XGBOOST NO EST¡ COMPILADO CON LA OPCI”N "HDFS"...
+# NOTA "#dtrain.cache" es para la versi√≥n con cach√© de disco, para ficheros "GRANDES"...
+#dtrain = xgb.DMatrix("hdfs:///trainset.libsvm/#dtrain.cache") # ESTO NO FUCNIONA IS XGBOOST NO EST√Å COMPILADO CON LA OPCI√ìN "HDFS"...
 # dtrain = xgb.DMatrix(train_df.select("features"), label = train_df.select("label"))
 param = {'max_depth':2, 'eta':1, 'silent':1, 'objective':'binary:logistic', 'eval_metric':'map'}
 num_round = 20
@@ -187,16 +187,16 @@ bin/pysparkling
 # ********************************************************************************************************************************************
 # virtualenv + pyspark + keras + tensorlfow: [http://henning.kropponline.de/2016/09/17/running-pyspark-with-virtualenv/]
 #
-NOTA: Lo que sigue hay que hacerlo en cada m·quina del cluster SPARK (master y nodos):
+NOTA: Lo que sigue hay que hacerlo en cada m√°quina del cluster SPARK (master y nodos):
 NOTA: Estamos en: jjtoharia@cluster-jjtzapata-m:~$ [pwd = /home/jjtoharia]  (o en cluster-jjtzapata-w0 o en cluster-jjtzapata-w1...)
 sudo apt-get install python-pip
 sudo pip install virtualenv
 virtualenv kaggle
 virtualenv --relocatable kaggle
 source kaggle/bin/activate
-# No sÈ si hace falta numpy, pero lo hice antes de instalar keras:
+# No s√© si hace falta numpy, pero lo hice antes de instalar keras:
 pip install numpy
-# Mostrar la versiÛn de numpy:
+# Mostrar la versi√≥n de numpy:
 python -c "import numpy as np; print('Python numpy v. ' + np.version.version)"
 pip install keras
 pip install tensorflow
@@ -228,11 +228,11 @@ pip install flask
 # Para que funcione con keras v1.xxx:
 pip install --upgrade --no-deps git+git://github.com/maxpumperla/elephas
 sudo nano /etc/spark/conf/spark-env.sh
-# AÒadir al final del fichero spark-env.sh:
+# A√±adir al final del fichero spark-env.sh:
 if [ -z "${PYSPARK_PYTHON}" ]; then
   export PYSPARK_PYTHON=/home/jjtoharia/kaggle/bin/python2.7
 fi
-NOTA: De esta forma no hace falta arrancar el virtualenv (con source xxx/bin/activate). Se usar· lo instalado en ese lugar de cada m·quina (master y nodos).
+NOTA: De esta forma no hace falta arrancar el virtualenv (con source xxx/bin/activate). Se usar√° lo instalado en ese lugar de cada m√°quina (master y nodos).
 # sudo reboot
 # ********************************************************************************************************************************************
 # ********************************************************************************************************************************************
@@ -258,7 +258,7 @@ def from_feather_to_csv(fich = 'clicks_X_valid_4-1.feather', s_input_path = 'kag
   from numpy import savetxt as np_savetxt
   X = fthr_read_dataframe(s_input_path + fich)
   fich = fich.replace('.feather', '_para_spark.csv')
-  # # Quitamos NAs (ponemos ceros): NO deberÌa haber... (°°°PERO HAY!!!) (uuid_pgvw_hora_min, p.ej.)
+  # # Quitamos NAs (ponemos ceros): NO deber√≠a haber... (¬°¬°¬°PERO HAY!!!) (uuid_pgvw_hora_min, p.ej.)
   # X[isnan(X)] = 0
   np_savetxt(s_input_path + fich, X, delimiter=',')
   print(fich, X.values.shape, ' Ok.')
@@ -270,7 +270,7 @@ def from_feather_to_csv_all():
     for nF in range(1, 9999): # 1,...,(n-1)
       fichtr = 'clicks_X_train_' + str(seq_len) + '-' + str(nF) + '.feather'
       if not os_path_isfile(s_input_path + fichtr):
-        break # Ya no hay m·s
+        break # Ya no hay m√°s
       fich = 'clicks_X_train_' + str(seq_len) + '-' + str(nF) + '.feather'; fich = from_feather_to_csv(fich)
       fich = 'clicks_X_valid_' + str(seq_len) + '-' + str(nF) + '.feather'; fich = from_feather_to_csv(fich)
       fich = 'clicks_X_test_' + str(seq_len) + '-' + str(nF) + '.feather'; fich = from_feather_to_csv(fich)
@@ -453,7 +453,7 @@ def mi_reshape(X, y, seq_len = 1):
 def mi_reshape_probs(probs, seq_len = 1):
   if len(probs.shape) == 3:
     if seq_len != probs.shape[1]:
-      print('NOTA: La dimensiÛn Seq_Len de probs NO coincide con el param. seq_len!')
+      print('NOTA: La dimensi√≥n Seq_Len de probs NO coincide con el param. seq_len!')
     probs = np_reshape(probs, (probs.shape[0] * probs.shape[1], probs.shape[2]))
   print(probs.shape)
   return(probs)
@@ -497,7 +497,7 @@ seq_len = 4
 dropout_in = 0.3
 dropout_U = 0.3
 batchsize = 1000
-num_capas = 1 # 1, 2 Û 3
+num_capas = 1 # 1, 2 √≥ 3
 lstm_neuronas_ini = 48 # 192
 lstm_neuronas_mid = 24 # 48
 lstm_neuronas_fin = 12 # 12
@@ -515,9 +515,9 @@ mis_metrics = ['accuracy'] # mis_metrics = ['precision']
 rdd_train_txt = sc.textFile(s_spark_inputpath + 'clicks_train_seq' + str(seq_len) + '-1_rdd')
 from numpy import array as np_array
 rdd_train_ok = rdd_train_txt.map(lambda s: eval(s)).map(lambda j: map(lambda s: np_array(s), j))
-print(rdd_train_ok.getNumPartitions()) # DeberÌa devolver numSparkWorkers == 4 (o m·s)
+print(rdd_train_ok.getNumPartitions()) # Deber√≠a devolver numSparkWorkers == 4 (o m√°s)
 
-# Obtenemos el n˙mero de columnas (num_cols) y el tamaÒo de la secuencia (seq_len) del RDD:
+# Obtenemos el n√∫mero de columnas (num_cols) y el tama√±o de la secuencia (seq_len) del RDD:
 primer_reg = rdd_train_ok.take(1)
 seq_len = len(primer_reg[0][0]) # 4
 num_cols = len(primer_reg[0][0][0]) # = 503
@@ -557,7 +557,7 @@ def evaluar_spark(mi_spark_model, X3_test, y_test):
   #probs = model.predict_proba(X3_test, batch_size=batchsize)[:,1] # Nos quedamos con las probs del "1"
   probs = mi_spark_model.predict(X3_test)
   print(probs.shape)
-  # probs = mi_reshape_probs(probs, seq_len)[:,1:] # Nos quedamos con las probs del "1" (por alguna razÛn aparecen a cero... ???)
+  # probs = mi_reshape_probs(probs, seq_len)[:,1:] # Nos quedamos con las probs del "1" (por alguna raz√≥n aparecen a cero... ???)
   print('1 - Loss: %.4f%%' % (100*(1-log_loss(y_test, mi_reshape_probs(probs, seq_len)[:,1:]))))
   return(probs)
 
@@ -627,7 +627,7 @@ def guardar_preds(model, X_test, indice = 0, b_csv = True, numAds = 0, numAdsFic
   print('\nOk. [' + 'In/python/' + str_fich + ('.csv' if b_csv else '.feather') + ']')
   np_savetxt(s_output_path + str_fich + '_' + str(iteraciones) + '_' + str(batchsize) + '-' + str(num_reg_train) + '.log', mi_X_train_shape, delimiter=',')
   print('Ok. [' + 'python/' + str_fich + '_' + str(iteraciones) + '_' + str(batchsize) + '-' + str(num_reg_train) + '.log]')
-  guardar_modelo_json(model, 'post', batchsize) # Guardamos estructura tambiÈn al final.
+  guardar_modelo_json(model, 'post', batchsize) # Guardamos estructura tambi√©n al final.
   print('\nOk. (Iter = ' + str(iteraciones) + '. BatchSize = ' + str(batchsize) + ')' + '. (Dropout_in = ' + str(dropout_in) + '. Dropout_U = ' + str(dropout_U) + ') - ' + str(num_reg_train) + ' regs/' + str(num_cols) + ' cols')
 
 guardar_preds(model, X3_test, 0, True, seq_len, 0, num_reg_train, num_cols, iteraciones, batchsize, dropout_in, dropout_U)
