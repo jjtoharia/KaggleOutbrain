@@ -88,7 +88,7 @@ def mi_reshape(X, y, seq_len = 1):
 def mi_reshape_probs(probs, seq_len = 1):
   if len(probs.shape) == 3:
     if seq_len != probs.shape[1]:
-      print('NOTA: La dimensión Seq_Len de probs NO coincide con el param. seq_len!')
+      print('NOTA: La dimensiÃ³n Seq_Len de probs NO coincide con el param. seq_len!')
     probs = np_reshape(probs, (probs.shape[0] * probs.shape[1], probs.shape[2]))
   print(probs.shape)
   return(probs)
